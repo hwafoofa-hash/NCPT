@@ -13,20 +13,20 @@ A zero-parameter derivation of the hadronic enhancement factor Γₙ ≈ 1.86×1
 ### 🔬 How to Run the Code
 This repository contains the Python scripts to reproduce the key results.
 
-# NCPT Hadron Derivation: Γ_h Origin
+## Hadron Derivation: Γ_h Origin
 
-## Overview
+### Overview
 Zero-parameter derivation of hadron enhancement Γ_h ≈ 1.86 × 10^6 via QCD scale separation and field-theory corrections. Integrates with NCPT triad (h-c coupling, ρ_empty, velocity weave).
 
-## Setup
+### Setup
 - Python 3.12+
 - Dependencies: numpy, sympy, scipy (pip install)
 
-## Run
+### Run
 python gamma_h_numeric.py  # Numerical Γ_h computation
 python rge_sympy.py  # Symbolic RGE
 
-## Results
+### Results
 - Γ_h = 1.8602 × 10^6 (error 0.17% vs PDG target)
 - Convergence with Math Path A: <0.1%
 
