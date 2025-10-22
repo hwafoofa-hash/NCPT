@@ -1,0 +1,62 @@
+import numpy as np
+
+# --- 步骤 1: 从您的图表中提取斜率 S ---
+# 请查看您生成的右图 (|c_1,0|² vs. β²)。
+# 从图中的直线上选取一个点，最好是离原点较远的点以提高精度。
+# 然后将该点的 x 坐标 (β²) 和 y 坐标 (|c_1,0|²) 填入下方。
+#
+# 根据您之前提供的图表示例，我估读了最右侧的点：
+x_point_from_graph = 0.25  # 这是 β² 的值
+y_point_from_graph = 0.004 # 这是 |c_1,0|² 的值
+
+# 计算斜率 S = y / x
+if x_point_from_graph == 0:
+    S = 0
+else:
+    S = y_point_from_graph / x_point_from_graph
+
+print(f"--- 步骤 1: 斜率计算 ---")
+print(f"从图表中提取的点 (β², |c_1,0|²) = ({x_point_from_graph}, {y_point_from_graph})")
+print(f"计算出的直线斜率 S = {S:.4f}\n")
+
+
+# --- 步骤 2: 计算 NCPT 预测的比例系数 ---
+print(f"--- 步骤 2: NCPT 预测值计算 ---")
+
+# 定义物理常数 (SI 单位)
+e = 1.602176634e-19  # 基本电荷 (C)
+m_e = 9.1093837015e-31 # 电子质量 (kg)
+c = 299792458       # 光速 (m/s)
+
+# 计算 NCPT 预测的斯塔克效应系数
+# C_NCPT = S * (e^2) / (m_e * c^2)
+C_NCPT = S * (e**2) / (m_e * c**2)
+
+print(f"NCPT 理论预测的斯塔克效应系数 C_NCPT = {C_NCPT:.4e} (SI 单位)\n")
+
+
+# --- 步骤 3: 与真实世界的实验值对比 ---
+print(f"--- 步骤 3: 与标准理论对比 ---")
+
+# 氢原子基态的极化率 (alpha)
+alpha_H = 6.66793e-41  # (C^2 * m / N)
+
+# 标准量子力学 (QM) 预测的斯塔克效应系数
+# C_QM = -(1/2) * alpha
+C_QM = -0.5 * alpha_H
+
+print(f"标准量子力学预测的系数 C_QM = {C_QM:.4e} (SI 单位)")
+print(f"         (我们只比较绝对值) |C_QM| = {np.abs(C_QM):.4e} (SI 单位)\n")
+
+
+# --- 最终审判 ---
+print(f"--- 最终审判：NCPT vs. 标准理论 ---")
+ratio = np.abs(C_NCPT / C_QM)
+print(f"我们的预测值与真实值的比率 |C_NCPT / C_QM| = {ratio:.4f}")
+
+if np.isclose(ratio, 1.0, atol=0.1):
+    print("\n结论：惊人的吻合！理论通过了第一次定量检验！")
+elif np.isclose(ratio, 1.0, atol=0.5):
+    print("\n结论：非常接近！结果在同一个数量级，理论极具潜力！")
+else:
+    print("\n结论：存在数量级差异。我们需要重新审视理论假设（例如能量模型K或微扰模型β）。")
