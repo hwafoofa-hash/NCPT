@@ -1,0 +1,43 @@
+import numpy as np
+from scipy.special import sph_harm
+
+# (C60_VERTICES 数组与上一节相同，此处省略)
+
+def calculate_clm_perturbed(vertices, l_max, beta):
+    """
+    在外部微扰下，计算顶点分布的球谐展开系数 c_lm。
+    beta: 微扰强度参数。
+    """
+    N = len(vertices)
+    x, y, z = vertices[:, 0], vertices[:, 1], vertices[:, 2]
+    
+    # --- 核心修改：引入与z相关的权重 ---
+    # 线性微扰模型
+    weights = (1.0 / N) * (1 + beta * z)
+    # 确保总权重归一化为1
+    weights /= np.sum(weights)
+    
+    # 笛卡尔坐标转球坐标
+    r = np.sqrt(x**2 + y**2 + z**2)
+    theta = np.arccos(z / r)
+    phi = np.arctan2(y, x)
+    
+    coefficients = {}
+    
+    for l in range(l_max + 1):
+        for m in range(-l, l + 1):
+            ylm_conj = np.conj(sph_harm(m, l, phi, theta))
+            
+            # 使用新的权重数组进行求和
+            c_lm = np.sum(weights * ylm_conj)
+            
+            # 我们现在关心那些之前为零，现在不为零的系数
+            if not np.isclose(c_lm, 0.0, atol=1e-5): # 使用一个小的容忍度
+                coefficients[(l, m)] = c_lm
+                
+    return coefficients
+
+# --- 执行计算：设置一个小的微扰强度 ---
+beta = 0.1
+l_max = 10
+clm_perturbed_results = calculate_clm_perturbed(C60_VERTICES, l_max, beta)
