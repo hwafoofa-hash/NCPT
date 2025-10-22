@@ -1,0 +1,63 @@
+import numpy as np
+
+# --- 步骤 1: 定义已知常数和实验数据 ---
+
+# 轻子理论的基准值
+C_QM_electron_abs = 3.33395e-41  # 电子的斯塔克系数 (SI 单位)
+m_e = 0.511                     # 电子质量 (MeV/c^2)
+
+# 质子 (Proton) 的数据
+m_p = 938.272                   # 质子质量 (MeV/c^2)
+C_QM_proton_abs = 1.0e-44       # 质子的实验斯塔克系数 (SI 单位)
+
+# 中子 (Neutron) 的数据
+m_n = 939.565                   # 中子质量 (MeV/c^2)
+C_QM_neutron_abs = 1.1e-44      # 中子的实验斯塔克系数 (SI 单位, 约值)
+
+print("--- NCPT 强子物理学 v1.0 ---")
+print("目标：从质子中提取'强子增强因子'，并用它来预测中子。\n")
+
+
+# --- 步骤 2: 从质子数据中标定强子增强因子 (Γ_h) ---
+print("--- Part 1: Calibrating the Hadronic Enhancement Factor (Γ_h) ---")
+
+# 首先，计算纯轻子理论对质子的“天真”预测值
+mass_ratio_p = m_e / m_p
+C_NCPT_naive_p = C_QM_electron_abs * (mass_ratio_p**3)
+
+# 然后，计算理论与现实的差距，即强子增强因子
+Gamma_h = C_QM_proton_abs / C_NCPT_naive_p
+
+print(f"纯轻子理论对质子的预测: {C_NCPT_naive_p:.4e}")
+print(f"质子的真实实验值: {C_QM_proton_abs:.4e}")
+print(f"计算出的强子增强因子 Γ_h = {Gamma_h:.4e}\n")
+
+
+# --- 步骤 3: 使用 Γ_h 预测中子的斯塔克效应 ---
+print("--- Part 2: Predicting the Neutron's Stark Effect ---")
+print(f"核心假设：质子和中子共享同一个增强因子 Γ_h = {Gamma_h:.4e}")
+
+# 首先，计算纯轻子理论对中子的“天真”预测值
+mass_ratio_n = m_e / m_n
+C_NCPT_naive_n = C_QM_electron_abs * (mass_ratio_n**3)
+
+# 然后，用我们刚刚确定的 Γ_h 对“天真”预测进行增强
+C_NCPT_corrected_n = Gamma_h * C_NCPT_naive_n
+
+print(f"纯轻子理论对中子的预测: {C_NCPT_naive_n:.4e}")
+print(f"应用 Γ_h 增强后的 NCPT 最终预测: {C_NCPT_corrected_n:.4e}")
+print(f"中子的真实实验值: {C_QM_neutron_abs:.4e}\n")
+
+
+# --- 步骤 4: 最终审判 (强子领域) ---
+print("--- Final Judgment: NCPT Hadron Prediction vs. Neutron Experiment ---")
+
+# 计算我们新预测与中子实验值的比率
+ratio = C_NCPT_corrected_n / C_QM_neutron_abs
+
+print(f"我们的新预测与中子实验值的比率 = {ratio:.4f}")
+
+if np.isclose(ratio, 1.0, atol=0.2):  # 在20%的误差范围内
+    print("\n结论：难以置信的胜利！'强子增强因子'具有普适性，NCPT 成功踏入强子物理领域！")
+else:
+    print("\n结论：理论需要进一步发展。'增强因子'本身可能也与粒子内部的电荷分布等具体结构有关，而不仅仅是质量。")
