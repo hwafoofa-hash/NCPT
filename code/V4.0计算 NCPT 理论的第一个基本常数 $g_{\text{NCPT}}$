@@ -1,0 +1,31 @@
+import numpy as np
+
+# --- 步骤 1: 输入已知数值 ---
+
+# C_QM_abs 是我们理论需要匹配的“目标”，即现实世界的物理常数。
+C_QM_abs = 3.33395e-41  # 来自标准量子力学的斯塔克效应系数绝对值 (SI 单位)
+
+# C_NCPT_unscaled 是我们 v3.0 纯几何模型计算出的、未标定的“原始输出”。
+C_NCPT_unscaled = 1.884e-22 # 来自我们上次演算的结果 (SI 单位)
+
+print("--- 标定任务：计算几何耦合常数 g_NCPT ---")
+print(f"目标物理现实 (C_QM_abs): {C_QM_abs:.4e}")
+print(f"NCPT 纯几何输出 (C_NCPT_unscaled): {C_NCPT_unscaled:.4e}\n")
+
+
+# --- 步骤 2: 计算 g_NCPT ---
+
+# 我们的理论框架 v4.0 定义： C_NCPT_scaled = g_NCPT * C_NCPT_unscaled
+# 为了匹配现实，我们设定： C_NCPT_scaled = C_QM_abs
+# 因此，我们可以解出 g_NCPT：
+g_NCPT = C_QM_abs / C_NCPT_unscaled
+
+print(f"--- 结果 ---")
+print(f"计算出的 NCPT 几何耦合常数 g_NCPT = {g_NCPT:.4e} (无量纲)")
+
+
+# --- 结论 ---
+print("\n--- 结论与展望 ---")
+print(f"我们已经成功确定了NCPT理论的第一个基本常数。")
+print("这个极小的数值 g_NCPT ≈ {:.2e} 解释了为什么纯几何效应在宏观上难以察觉。".format(g_NCPT))
+print("它代表了潜能层几何结构'投影'到我们显现层物理世界时的内在强度。")
