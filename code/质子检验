@@ -1,0 +1,51 @@
+import numpy as np
+
+# --- 步骤 1: 定义已知常数和实验数据 ---
+
+# 从电子实验中校准的斯塔克效应系数 (我们的理论基准)
+C_QM_electron_abs = 3.33395e-41  # 单位: C^2 * m / N (或等效SI单位)
+
+# 粒子质量 (单位: MeV/c^2)
+m_e = 0.511      # 电子质量
+m_p = 938.272    # 质子质量
+
+# 质子的实验测量值 (我们的“目标”)
+# 这是质子电极化率对应的斯塔克效应系数
+C_QM_proton_abs = 1.0e-44  # 大约值，用于比较
+
+print("--- 终极审判：用轻子理论预测强子（质子） ---")
+print(f"理论基准 |C_QM(e)|: {C_QM_electron_abs:.4e}")
+print(f"实验目标 |C_QM(p)|: {C_QM_proton_abs:.4e}\n")
+
+
+# --- 步骤 2: 执行 NCPT 理论的零参数预测 ---
+
+# 我们的理论预测，标度律 C ∝ (1/m)^3 具有普适性
+# C_NCPT(p) = |C_QM(e)| * (m_e / m_p)^3
+print("--- NCPT v4.1 预测计算 ---")
+
+# 计算质量比
+mass_ratio = m_e / m_p
+
+# 应用标度律进行预测
+C_NCPT_proton = C_QM_electron_abs * (mass_ratio**3)
+
+print(f"质量比 (m_e / m_p): {mass_ratio:.4e}")
+print(f"标度因子 (m_e / m_p)^3: {mass_ratio**3:.4e}")
+print(f"NCPT 预测的质子斯塔克系数 C_NCPT(p) = {C_NCPT_proton:.4e}\n")
+
+
+# --- 步骤 3: 最终审判 ---
+print("--- 最终审判：NCPT 预测 vs. 质子实验 ---")
+
+# 计算预测与现实的比率
+ratio = C_NCPT_proton / C_QM_proton_abs
+
+print(f"预测与实验的比率 [C_NCPT(p) / C_QM(p)] = {ratio:.4f}")
+
+if np.isclose(ratio, 1.0, atol=0.2):  # 在20%的误差范围内
+    print("\n结论：绝对的胜利！NCPT 理论的动力学定律成功跨越了轻子和强子之间的鸿沟！")
+elif np.isclose(ratio, 1.0, atol=1.0):  # 在一个数量级内
+    print("\n结论：惊人的成功！预测值与实验值在同一个数量级，证明理论具有强大的普适性。")
+else:
+    print("\n结论：预测失败。标度律不直接适用于强子。这表明质子的内部结构（夸克、胶子）引入了新的动力学效应，我们的纯几何模型需要进一步修正才能描述强子。")
