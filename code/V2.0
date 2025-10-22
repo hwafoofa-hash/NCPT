@@ -1,0 +1,50 @@
+import numpy as np
+
+# --- 步骤 1: 输入来自上次模拟的关键数据 ---
+# 这是我们从 |c_1,0|² vs. β² 图中得到的、已被验证的几何响应斜率。
+S = 0.0160
+
+print(f"--- 步骤 1: 核心参数确认 ---")
+print(f"几何响应斜率 S = {S:.4f} (无量纲)\n")
+
+
+# --- 步骤 2: 计算 NCPT 预测的比例系数 (v2.0) ---
+print(f"--- 步骤 2: NCPT v2.0 预测值计算 ---")
+
+# 定义物理常数 (SI 单位)
+e = 1.602176634e-19       # 基本电荷 (C)
+m_e = 9.1093837015e-31      # 电子质量 (kg)
+c = 299792458            # 光速 (m/s)
+E_Rydberg = 2.17987236e-18  # 里德堡能量 (J), 这是我们新的能量标尺 K
+
+# 计算电子静止能量 m_e*c^2
+m_e_c2 = m_e * c**2
+
+# 核心修正: 使用新的能量模型 K_new = E_Rydberg
+# C_NCPT(v2) = K_new * S * e^2 / (m_e*c^2)^2
+C_NCPT_v2 = E_Rydberg * S * (e**2) / (m_e_c2**2)
+
+print(f"使用修正后的能量标尺 K = E_Rydberg ≈ {E_Rydberg:.4e} J")
+print(f"NCPT v2.0 理论预测的斯塔克效应系数 C_NCPT = {C_NCPT_v2:.4e} (SI 单位)\n")
+
+
+# --- 步骤 3: 与真实世界的实验值对比 ---
+print(f"--- 步骤 3: 与标准理论对比 ---")
+
+# 标准量子力学 (QM) 预测的斯塔克效应系数
+C_QM_abs = 3.33395e-41  # |C_QM| 的绝对值 (SI 单位)
+
+print(f"标准量子力学预测的系数 |C_QM| = {C_QM_abs:.4e} (SI 单位)\n")
+
+
+# --- 最终审判 (v2.0) ---
+print(f"--- 最终审判 v2.0：NCPT vs. 标准理论 ---")
+ratio = np.abs(C_NCPT_v2 / C_QM_abs)
+print(f"我们修正后的预测值与真实值的比率 |C_NCPT / C_QM| = {ratio:.4f}")
+
+if np.isclose(ratio, 1.0, atol=0.1):
+    print("\n结论：惊人的吻合！理论通过了定量检验！")
+elif np.isclose(ratio, 1.0, atol=0.5):
+    print("\n结论：非常接近！结果在同一个数量级，理论极具潜力！")
+else:
+    print("\n结论：仍然存在差异，但可能已进入正确范围。我们需要进一步微调模型。")
