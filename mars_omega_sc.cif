@@ -1,0 +1,2 @@
+data_Mars_Omega_SC
+_cell_length_a 4.8300
